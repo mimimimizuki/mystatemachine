@@ -11,6 +11,7 @@ import (
 type State struct {
 	Id  int64
 	Val interface{}
+	isFinal bool
 }
 
 type comparable interface {
@@ -58,15 +59,15 @@ func New() *StateMachine {
 	return s
 }
 
-func (s *StateMachine) Init(initStateValue interface{}) State {
-	s.CurrentState = State{Id: int64(NodeCounter), Val: initStateValue}
+func (s *StateMachine) Init(initStateValue interface{}, isfinal bool) State {
+	s.CurrentState = State{Id: int64(NodeCounter), Val: initStateValue, isFinal: isfinal}
 	s.g.AddNode(s.CurrentState)
 	NodeCounter++
 	return s.CurrentState
 }
 
-func (s *StateMachine) NewState(stateValue interface{}) State {
-	state := State{Id: int64(NodeCounter), Val: stateValue}
+func (s *StateMachine) NewState(stateValue interface{}, isfinal bool) State {
+	state := State{Id: int64(NodeCounter), Val: stateValue, isFinal: isfinal}
 	
 	s.g.AddNode(state)
 	NodeCounter++
@@ -95,7 +96,7 @@ func (n State) String() string{
 	}
 }
 
-func FireEvent[T comparable](s *StateMachine, e T) error {
+func FireEvent[T comparable](s *StateMachine, r T) error {
 	currentNode := s.CurrentState
 
 	it := s.g.From(currentNode.Id)
@@ -103,7 +104,7 @@ func FireEvent[T comparable](s *StateMachine, e T) error {
 		n := s.g.Node(it.Node().ID()).(State)
 		edge := graph.LinesOf(s.g.Lines(currentNode.Id, n.Id))[0].(Edge[T]) // There can be one defined path between two distinct states
 		for _, val := range edge.Rules {
-			if val == e {
+			if val == r {
 				s.CurrentState = n
 				return nil
 			}
@@ -113,11 +114,14 @@ func FireEvent[T comparable](s *StateMachine, e T) error {
 }
 
 
-func Compute[T comparable](s *StateMachine, events []T, printState bool) State {
-	for _, e := range events {
-		FireEvent(s, e)
+func Compute[T comparable](s *StateMachine, rules []T, printState bool) State {
+	for _, r := range rules {
+		FireEvent(s, r)
 		if printState {
 			fmt.Printf("%s\n", s.CurrentState.String())
+		}
+		if s.CurrentState.isFinal {
+			break	
 		}
 	}
 	return s.CurrentState
