@@ -8,9 +8,6 @@ import (
 func TestMyStateMachine(t *testing.T) {
 	stateMachine := mystatemachine.New()
 
-	// painEvent := "skiing"
-	// happyEvent := "sleep"
-
 	testNoEvent := false
 	testYesEvent := true
 

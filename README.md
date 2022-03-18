@@ -6,22 +6,22 @@ import "mystatemachine"
 
 stateMachine := mystatemachine.New()
 
-	painEvent := "skiing"
-	happyEvent := "sleep"
+	painRule := "skiing" // <= the type T
+	happyRule := "sleep"
 
-	initstate := stateMachine.Init("happy") // set initialize state
-	state := stateMachine.NewState("pain") // add another state
+	initstate := stateMachine.Init("happy", false) // set initialize state, bool is whether the final node or not
+	state := stateMachine.NewState("pain", false) // add another state
 
     // add edge (statemachine, from state, to state, events)
 
-	mystatemachine.AddEdge(stateMachine, initstate, state, []string{painEvent})
-	mystatemachine.AddEdge(stateMachine, state, initstate, []string{happyEvent})
+	mystatemachine.AddEdge(stateMachine, initstate, state, []string{painRule})
+	mystatemachine.AddEdge(stateMachine, state, initstate, []string{happyRule})
 
-	mystatemachine.AddEdge(stateMachine, initstate, initstate, []string{happyEvent})
-	mystatemachine.AddEdge(stateMachine, state, state, []string{painEvent})
+	mystatemachine.AddEdge(stateMachine, initstate, initstate, []string{happyRule})
+	mystatemachine.AddEdge(stateMachine, state, state, []string{painRule})
 
-    events := []string{..., ..., ...} // set event
+    rules := []string{..., ..., ...} // set event
 
-    mystatemachine.Compute(stateMachine, events, isPrint) // if isPrint is true, print each node
+    mystatemachine.Compute(stateMachine, rules, isPrint) // if isPrint is true, print each node
 
 ```
