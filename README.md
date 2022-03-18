@@ -1,5 +1,7 @@
 ## my state machine
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/mimimimizuki/mystatemachine.svg)](https://pkg.go.dev/github.com/mimimimizuki/mystatemachine)
+
 ```
 
 import "mystatemachine"

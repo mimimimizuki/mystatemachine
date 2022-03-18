@@ -1,4 +1,4 @@
-module mystatemachine
+module github.com/mimimimizuki/mystatemachine
 
 go 1.18
 
