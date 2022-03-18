@@ -1,8 +1,7 @@
 ## my state machine
 
-event type is [T Comparable]
-
 ```
+
 import "mystatemachine"
 
 stateMachine := mystatemachine.New()
